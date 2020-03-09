@@ -1,10 +1,10 @@
 body {
-  background-color: #f8cece;
+  background-color: #ffffff;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 18px;
   line-height: 1.3;
   text-align: center;
-  color: #185b9f;
+  color: #252544;
   font-weight: 400;
 }
 
@@ -45,7 +45,7 @@ body {
   width: 200px;
   height: 200px;
   padding: 30px;
-  border: 2px solid #185b9f;
+  border: 2px solid #252544;
   border-radius: 50%;
 }
 
@@ -132,7 +132,7 @@ body {
   width: 48px;
   height: 48px;
   font-size: 1.6em;
-  color: #185b9f;
+  color: #252544;
 }
 
 .length button:hover,
