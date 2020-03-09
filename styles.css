@@ -1,0 +1,150 @@
+body {
+  background-color: #f8cece;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 18px;
+  line-height: 1.3;
+  text-align: center;
+  color: #185b9f;
+  font-weight: 400;
+}
+
+.container {
+  margin: 40px auto;
+  position: relative;
+}
+
+.title {
+  font-weight: 300;
+  font-size: 2.2em;
+}
+
+
+/* timer circle */
+
+#timer-container {
+  position: relative;
+  display: inline-block;
+  width: 264px;
+  height: 264px;
+}
+
+#timer-wrapper,
+#c {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#c {
+  z-index: -1;
+}
+
+#timer {
+  width: 200px;
+  height: 200px;
+  padding: 30px;
+  border: 2px solid #185b9f;
+  border-radius: 50%;
+}
+
+#timer #timer-label {
+  line-height: 30px;
+  font-weight: 300;
+  font-size: 1.5em;
+  margin: 0;
+}
+
+#timer #time,
+#timer .play-pause {
+  margin: 0;
+  font-size: 4.5em;
+  line-height: 120px;
+}
+
+#timer .play-pause {
+  font-size: 2.5em;
+  font-family: FontAwesome;
+  line-height: 50px;
+  cursor: pointer;
+}
+
+
+/* volume and refresh icons */
+
+.icons {
+  width: 264px;
+  height: 48px;
+  font-size: 1.4em;
+  margin: 0px auto 10px auto;
+}
+
+.fa {
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+}
+
+#volume {
+  text-align: left;
+  float: left;
+}
+
+.fa-refresh {
+  text-align: right;
+  float: right;
+}
+
+.fa:hover {
+  cursor: pointer;
+}
+
+
+/* break and session length controls */
+
+.length {
+  display: inline-block;
+  padding: 8px 10px;
+  line-height: 48px;
+  margin-top: 0;
+}
+
+.length .label {
+  margin: 0px;
+  text-transform: uppercase;
+  line-height: 1;
+  font-size: 0.9em;
+}
+
+.length .number {
+  display: inline-block;
+  font-size: 1.6em;
+  min-width: 30px;
+}
+
+.length button {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  overflow: hidden;
+  outline: none;
+  width: 48px;
+  height: 48px;
+  font-size: 1.6em;
+  color: #185b9f;
+}
+
+.length button:hover,
+.length button:active {
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+audio {
+  display: block;
+}

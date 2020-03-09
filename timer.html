@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Design Sprint Timer</title>
+	 <link rel = "stylesheet" type = "text/css" href = "./styles.css" />
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+	<div class="container">
+	  <h1 class="title">
+		<img src="./CBAServiceJam.png" alt="Córdoba Service Jam" width="250px">
+	  </h1>
+	  <div id="timer-container">
+	    <div id="timer-wrapper">
+	      <div id="timer">
+	        <p id="timer-label" contenteditable="true">Session</p>
+	        <p id="time"><span id="minutes">10</span>:<span id="seconds">00</span></p>
+	        <p id="play" class="play-pause">&#9658;</p>
+	        <p id="pause" class="play-pause hidden">&#9208;</p>
+	      </div>
+	    </div>
+	    <canvas id="c" width="264" height="264"></canvas>
+	  </div>
+	  <div class="icons">
+	    <i id="volume" class="fa fa-volume-up" title="Timer Sound"></i>
+	    <i class="fa fa-refresh" title="Reset"></i>
+	  </div>
+	  <div class="length sess-len-box">
+	    <p class="label">Session Length</p>
+	    <button id="session-decr">&minus;</button>
+	    <span id="session-len" class="number">1</span>
+	    <button id="session-incr">+</button>
+	  </div>
+	  <audio>
+	      <source src="https://res.cloudinary.com/dcipgojfd/video/upload/v1460262001/Music_Box.mp3" type="audio/mpeg">
+	      Sorry, the timer sound will not play in this browser.
+	    </audio>
+	</div>
+</body>
+<script>
+	$(function() {
+	  'use strict';
+	  var timer;
+	  var sessionLen = $('#session-len').html();
+	  var breakLen = $('#break-len').html();
+	  var sessionShowing = true; // true if 'Session' is shown, false if 'Break'
+	  var playing = false;
+	  var volumeOn = true;
+
+	  // canvas to draw timer circle animation
+	  var c = document.querySelector('#c');
+	  var ctx = c.getContext('2d');
+	  ctx.strokeStyle = '#185b9f';
+	  ctx.lineWidth = 4;
+
+	  function runTimer() {
+	    // decrease time displayed in circle by 1 second and draw corresponding arc
+	    var minutes = $('#minutes').html();
+	    var seconds = parseInt($('#seconds').html());
+
+	    // decrease seconds value by 1, zero-padding if single digit
+	    if (seconds > 0) {
+	      seconds--;
+	      drawArc(minutes * 60 + seconds);
+	      if (seconds < 10)
+	        seconds = '0' + seconds.toString();
+	      $('#seconds').html(seconds);
+	    }
+	    // decrease minute value once seconds reaches 0 and set seconds to 59
+	    else if (minutes > 0) {
+	      $('#minutes').html(--minutes);
+	      $('#seconds').html(59);
+	      drawArc(minutes * 60 + 59);
+	    } else {
+	      timeUp();
+	    }
+	  }
+
+	  function drawArc(timeRemain) {
+	    // draw the correct proportion of the timer circle
+	    ctx.clearRect(0, 0, c.width, c.height);
+	    var totalTime = (sessionShowing) ? sessionLen : breakLen;
+	    var percentRem = (totalTime * 60 - timeRemain) / (totalTime * 60);
+	    ctx.beginPath();
+	    ctx.arc(132, 132, 130, 1.5 * Math.PI, 1.5 * Math.PI + percentRem * (2 * Math.PI));
+	    ctx.stroke();
+	  }
+
+	  function timeUp() {
+	    // when time is up, make timer flash, clear canvas, play audio if enabled,
+	    // change background color, and switch to next break or session
+	    $('#timer-container').addClass('animated flash').one(
+	      'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+	      function() {
+	        $('#timer-container').removeClass('animated flash');
+	      });
+	    ctx.clearRect(0, 0, c.width, c.height);
+	    document.querySelector('audio').play();
+		// $('#minutes').html(sessionLen);
+		// $('body').css('background-color', '#e0ac00');
+	  }
+
+	  // toggle play-pause button
+	  $('.play-pause').click(function() {
+	    // if not currently playing, start timer. Otherwise clear timer
+	    if (!playing) {
+	      timer = setInterval(runTimer, 1000);
+	    } else {
+	      clearInterval(timer);
+	    }
+	    $('.play-pause').toggleClass('hidden');
+	    playing = (playing) ? false : true;
+	  });
+
+	  function setLength(id, minuteVal) {
+	    // update break or session lengths in DOM and change value in timer
+	    $(id).html(minuteVal);
+	    if (id === '#session-len' && sessionShowing || id === '#break-len' && !sessionShowing) {
+	      $('#minutes').html(minuteVal);
+	      $('#seconds').html('00');
+	      ctx.clearRect(0, 0, c.width, c.height);
+	    }
+	  }
+
+	  // buttons to incr and decr break and session length
+	  $('#break-incr').click(function() {
+	    if (breakLen < 999) {
+	      setLength('#break-len', ++breakLen);
+	    }
+	  });
+	  $('#break-decr').click(function() {
+	    if (breakLen > 1) {
+	      setLength('#break-len', --breakLen);
+	    }
+	  });
+	  $('#session-incr').click(function() {
+	    if (sessionLen < 999) {
+	      setLength('#session-len', ++sessionLen);
+	    }
+	  });
+	  $('#session-decr').click(function() {
+	    if (sessionLen > 1) {
+	      setLength('#session-len', --sessionLen);
+	    }
+	  });
+
+	  // reset to session and break time shown on screen
+	  $('.fa-refresh').click(function() {
+	    ctx.clearRect(0, 0, c.width, c.height);
+	    $('#minutes').html(sessionLen);
+	    $('#seconds').html('00');
+	    if (!sessionShowing) {
+	      $('#timer-label').html('Session');
+	      sessionShowing = true;
+	      $('body').css('background-color', '#EF5350');
+	    }
+	    // if currently playing, stop timer
+	    if (playing) {
+	      clearInterval(timer);
+	      $('.play-pause').toggleClass('hidden');
+	      playing = false;
+	    }
+	  });
+
+	  // toggle volume
+	  $('#volume').click(function() {
+	    $('#volume').toggleClass('fa-volume-up fa-volume-off');
+	    volumeOn = (volumeOn) ? false : true;
+	  });
+
+	});
+</script>
+</html>
